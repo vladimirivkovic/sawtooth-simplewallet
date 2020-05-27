@@ -24,7 +24,7 @@ from setuptools import setup, find_packages
 data_files = []
 
 setup(
-    name='simplewallet-cli',
+    name='marbles-cli',
     version='1.0',
     description='Sawtooth SimpleWallet Example',
     author='askmish',
@@ -41,7 +41,7 @@ setup(
     data_files=data_files,
     entry_points={
         'console_scripts': [
-            'simplewallet = simplewallet_cli:main_wrapper',
+            'marbles = marbles_cli:main_wrapper',
         ]
     })
 

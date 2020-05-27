@@ -1,4 +1,4 @@
-# Copyright 2018 Intel Corporation
+# Copyright 2016 Intel Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,12 @@
 # limitations under the License.
 # -----------------------------------------------------------------------------
 '''
-Define files for the transaction processor package in this directory.
+Define files for the client package in this directory.
 '''
 
 __all__ = [
-    'simplewallet_tp',
-    'marbles_tp'
+    'marbles_client',
+    'marbles_cli',
+    'marbles_message_factory'
 ]
 
