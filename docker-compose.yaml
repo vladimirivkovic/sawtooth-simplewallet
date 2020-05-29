@@ -18,7 +18,13 @@ version: '2.1'
 services:
   simplewallet-processor:
     container_name: simplewallet-processor
-    image: askmish/sawtooth-simplewallet-tp-cxx:latest
+    build:
+      context: .
+      dockerfile: ./pyprocessor/Dockerfile
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
     depends_on:
       - validator
     volumes:
@@ -26,7 +32,13 @@ services:
 
   simplewallet-client:
     container_name: simplewallet-client
-    image: askmish/sawtooth-simplewallet-client-python:latest
+    build:
+      context: .
+      dockerfile: ./pyclient/Dockerfile
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
     environment:
       - 'http_proxy=${http_proxy}'
       - 'https_proxy=${https_proxy}'
@@ -60,6 +72,12 @@ services:
       - validator
     command: settings-tp -vv --connect tcp://validator:4004
 
+  blockinfo-tp:
+    image: hyperledger/sawtooth-block-info-tp:1.0
+    depends_on:
+      - validator
+    command: block-info-tp -vv --connect tcp://validator:4004
+
   validator:
     container_name: validator
     image: hyperledger/sawtooth-validator:1.0
@@ -73,7 +91,8 @@ services:
         sawadm keygen &&
         sawtooth keygen my_key &&
         sawset genesis -k /root/.sawtooth/keys/my_key.priv &&
-        sawadm genesis config-genesis.batch
+        sawadm genesis config-genesis.batch && 
+        sawset proposal create --url http://rest-api:8008 --key /root/.sawtooth/keys/my_key.priv sawtooth.validator.batch_injectors=block_info 'sawtooth.validator.block_validation_rules=NofX:1,block_info;XatY:block_info,0;local:0'
         fi;
         sawtooth-validator -vvv \
           --endpoint tcp://validator:8800 \
